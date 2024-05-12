@@ -40,8 +40,15 @@ def handle_userinput(user_question,model):
     """
 """
     resposta = gerar_e_buscar_consulta(user_question,st.session_state.df_embed,model)
-    st.write(user_template.replace("{{MSG}}",user_question), unsafe_allow_html=True)
-    st.write(bot_template.replace("{{MSG}}", resposta), unsafe_allow_html=True)
+    st.session_state.chat_history.append(user_question)
+    st.session_state.chat_history.append(resposta)
+    st.session_state.chat_place.empty()
+    with st.session_state.chat_place.container():
+        for i, message in enumerate(st.session_state.chat_history):
+            if i % 2 == 0:
+                st.write(user_template.replace("{{MSG}}", message), unsafe_allow_html=True)
+            else:
+                st.write(bot_template.replace("{{MSG}}", message), unsafe_allow_html=True)
 
 def embed_fn(model,title, text):
     return genai.embed_content(model=model,
@@ -79,15 +86,20 @@ def main():
     
     if "df_embed" not in st.session_state:
         st.session_state.df_embed = None
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = ["Olá Gemini","Olá Humano"]
+    if "chat_place" not in st.session_state:
+        st.session_state.chat_place = None
     
     st.header("Converse com vários PDFs :books:")
     user_question = st.text_input("Faça perguntas sobre os seus documentos:")
     if user_question:
         handle_userinput(user_question,embedding_model)
+    st.session_state.chat_place = st.empty()
+    with st.session_state.chat_place.container():
+        st.write(user_template.replace("{{MSG}}", "Olá Gemini"), unsafe_allow_html=True)
+        st.write(bot_template.replace("{{MSG}}", "Olá Humano"), unsafe_allow_html=True)
     
-    st.write(user_template.replace("{{MSG}}", "Olá Gemini"), unsafe_allow_html=True)
-    st.write(bot_template.replace("{{MSG}}", "Olá Humano"), unsafe_allow_html=True)
-
     with st.sidebar:
         st.subheader("Seus Documentos")
         pdf_docs = st.file_uploader(
