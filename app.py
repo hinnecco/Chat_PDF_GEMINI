@@ -92,10 +92,11 @@ def main():
         st.session_state.chat_place = None
     
     st.header("Converse com vários PDFs :books:")
+    st.session_state.chat_place = st.empty()
     user_question = st.text_input("Faça perguntas sobre os seus documentos:")
     if user_question:
         handle_userinput(user_question,embedding_model)
-    st.session_state.chat_place = st.empty()
+    
     with st.session_state.chat_place.container():
         st.write(user_template.replace("{{MSG}}", "Olá Gemini"), unsafe_allow_html=True)
         st.write(bot_template.replace("{{MSG}}", "Olá Humano"), unsafe_allow_html=True)
