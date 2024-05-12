@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "gemini-chat-pdf"
+version = "0.1.0"
+description = "Projeto desenvolvido para Imersão IA da Alura e do Google, com a intenção de possibilitar que as pessoas possam fazer perguntas para seus arquivos PDFs."
+authors = ["Henrique Innecco <hinnecco@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
